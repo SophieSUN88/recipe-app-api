@@ -1,7 +1,7 @@
 # a list of file that will be exclude from docker context
 
 # Git
-.Git
+.git
 .gitignore
 
 # Docker

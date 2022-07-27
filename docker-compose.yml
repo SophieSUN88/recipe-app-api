@@ -1,15 +1,12 @@
 version: "3.9"
 
-services: 
+services:
   app:
     build:
       context: .
     ports:
-      - "8000:8000" # 8000 from local machine to 8000 in docker
+      - "8000:8000" 
     volumnes:
-      - ./app:/app # maping from system to docker container
-    command: >  # to run the service, it is the default conmand
+      - ./app:/app 
+    command: >  
       sh -c "python manage.py runserver 0.0.0.0:80000"
-
-# so we don't want to rebuild the container every time we change a line of code
-# we want to automatically sync the code in our project to the cloud run in the container
