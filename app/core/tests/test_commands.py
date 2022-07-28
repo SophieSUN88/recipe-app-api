@@ -3,7 +3,7 @@ Test custom Django management commands.
 """
 from unittest.mock import patch
 
-from psycopg2 import OperationalError as Psycopg2Error
+from psycopg2 import OperationalError as Psycopg2OpError
 
 from django.core.management import call_command
 from django.db.utils import OperationalError
@@ -19,8 +19,8 @@ class CommandTests(SimpleTestCase):
         patched_check.return_value = True
 
         call_command('wait_for_db')
- 
-        patched_check.assert_called_once_with(database=['default'])
+
+        patched_check.assert_called_once_with(databases=['default'])
 
     # patch will match from inside to outside with parameters left to right;
     # so first one is @patch('time.sleep') = patched_sleep,
@@ -31,10 +31,10 @@ class CommandTests(SimpleTestCase):
         # it will raise 2 Psycopg2Error, then followed with 3 OperationalError, then return True
         # side_effect:This can either be a function to be called when the mock is called, 
         # an iterable or an exception (class or instance) to be raised.
-        patched_check.side_effect = [Psycopg2Error] *2 * \
+        patched_check.side_effect = [Psycopg2OpError] * 2 * \
             [OperationalError] * 3 + [True]
         
         call_command('wait_for_db')
 
-        self.assertEqual(patched_check.call_count,6)
-        patched_check.assert_called_with(database=['default'])
+        self.assertEqual(patched_check.call_count, 6)
+        patched_check.assert_called_with(databases=['default'])
